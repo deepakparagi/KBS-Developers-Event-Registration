@@ -27,9 +27,15 @@ async function appendToSheet(data: RegistrationPayload): Promise<void> {
   console.log("appendToSheet: Starting Google API auth with email:", clientEmail);
   console.log("appendToSheet: Targeting Spreadsheet ID:", spreadsheetId);
 
+  // Robust private key parsing to handle escaped newlines and literal quotes
+  const formattedKey = privateKey
+    .replace(/^"|"$/g, "") // Remove potential leading/trailing quotes
+    .split(String.raw`\n`)
+    .join("\n");
+
   const auth = new google.auth.JWT({
     email: clientEmail,
-    key: privateKey.replace(/\\n/g, "\n"),
+    key: formattedKey,
     scopes: ["https://www.googleapis.com/auth/spreadsheets"]
   });
 
