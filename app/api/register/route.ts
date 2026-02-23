@@ -1,5 +1,6 @@
 import { google } from "googleapis";
 import { NextRequest, NextResponse } from "next/server";
+import { waitUntil } from "@vercel/functions";
 
 type RegistrationPayload = {
   fullName: string;
@@ -107,13 +108,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Fire and forget updating the sheet, returning the API response early
-    appendToSheet({
-      fullName,
-      contactNumber,
-      emailAddress,
-      numberOfAdults: adults,
-      numberOfKids: kids
-    }).catch(console.error);
+    waitUntil(
+      appendToSheet({
+        fullName,
+        contactNumber,
+        emailAddress,
+        numberOfAdults: adults,
+        numberOfKids: kids
+      }).catch(console.error)
+    );
 
     return NextResponse.json(
       { success: true, message: "Registration saved successfully" },
