@@ -15,9 +15,17 @@ async function appendToSheet(data: RegistrationPayload): Promise<void> {
   const privateKey = process.env.GOOGLE_PRIVATE_KEY;
   const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 
+  console.log("appendToSheet: Checking environment variables...");
   if (!clientEmail || !privateKey || !spreadsheetId) {
+    console.error("appendToSheet: FAILED - Missing environment variables", {
+      hasEmail: !!clientEmail,
+      hasKey: !!privateKey,
+      hasSheetId: !!spreadsheetId
+    });
     throw new Error("Missing required environment variables");
   }
+  console.log("appendToSheet: Starting Google API auth with email:", clientEmail);
+  console.log("appendToSheet: Targeting Spreadsheet ID:", spreadsheetId);
 
   const auth = new google.auth.JWT({
     email: clientEmail,
@@ -48,12 +56,18 @@ async function appendToSheet(data: RegistrationPayload): Promise<void> {
     ]
   ];
 
-  await sheets.spreadsheets.values.append({
-    spreadsheetId,
-    range: "Sheet1!A:F",
-    valueInputOption: "USER_ENTERED",
-    requestBody: { values }
-  });
+  try {
+    await sheets.spreadsheets.values.append({
+      spreadsheetId,
+      range: "Sheet1!A:F",
+      valueInputOption: "USER_ENTERED",
+      requestBody: { values }
+    });
+    console.log("appendToSheet: SUCCESS - Entry added to Google Sheet");
+  } catch (error) {
+    console.error("appendToSheet: GOOGLE API ERROR", error);
+    throw error;
+  }
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -107,6 +121,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
+    console.log("Registration API: Request received, triggering background sheet update...");
     // Fire and forget updating the sheet, returning the API response early
     waitUntil(
       appendToSheet({
@@ -115,7 +130,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         emailAddress,
         numberOfAdults: adults,
         numberOfKids: kids
-      }).catch(console.error)
+      }).catch(err => {
+        console.error("Registration background task FAILED:", err);
+      })
     );
 
     return NextResponse.json(
