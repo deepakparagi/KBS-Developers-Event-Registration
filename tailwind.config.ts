@@ -33,6 +33,15 @@ const config: Config = {
         "section-sm": "3rem",
         "section-md": "5rem",
         "section-lg": "7.5rem"
+      },
+      keyframes: {
+        "scale-fade-in": {
+          "0%": { opacity: "0", transform: "scale(0.98)" },
+          "100%": { opacity: "1", transform: "scale(1)" }
+        }
+      },
+      animation: {
+        "scale-fade-in": "scale-fade-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards"
       }
     }
   },

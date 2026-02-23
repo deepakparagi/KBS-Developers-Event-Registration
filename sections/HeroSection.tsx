@@ -12,6 +12,7 @@ const heroContainer = {
     opacity: 1,
     y: 0,
     transition: {
+      delay: 2.2,
       duration: 0.9,
       ease: [0.22, 1, 0.36, 1],
       when: "beforeChildren",
@@ -66,7 +67,7 @@ export function HeroSection(): JSX.Element {
           style={{ x: smoothMouseX, y: smoothMouseY, scale: 1.05 }}
         >
           <Image
-            src="/hero-bg.jpg"
+            src="/new-bg-1.jpg"
             alt="Luxury modern architecture skyline"
             fill
             priority

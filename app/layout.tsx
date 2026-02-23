@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import type { ReactNode } from "react";
 import "@/styles/globals.css";
+import { AppLoader } from "@/components/AppLoader";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,7 +28,10 @@ type RootLayoutProps = {
 export default function RootLayout({ children }: RootLayoutProps): JSX.Element {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable}`}>{children}</body>
+      <body className={`${inter.variable} ${playfair.variable} bg-background text-text-primary`}>
+        <AppLoader />
+        {children}
+      </body>
     </html>
   );
 }

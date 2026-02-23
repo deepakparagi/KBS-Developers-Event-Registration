@@ -7,6 +7,7 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 import { FormField } from "@/components/FormField";
 import { GlassPanel } from "@/components/GlassPanel";
 import { GoldButton } from "@/components/GoldButton";
+import { GiftCard } from "@/components/GiftCard";
 import {
   type RegistrationFormErrors,
   type RegistrationFormValues,
@@ -44,6 +45,7 @@ export function RegistrationSection(): JSX.Element {
   const [values, setValues] = useState<RegistrationFormValues>(initialValues);
   const [errors, setErrors] = useState<RegistrationFormErrors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [registeredName, setRegisteredName] = useState("");
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -106,6 +108,7 @@ export function RegistrationSection(): JSX.Element {
         return;
       }
 
+      setRegisteredName(values.fullName);
       setSubmitted(true);
       setValues(initialValues);
     } catch {
@@ -127,7 +130,7 @@ export function RegistrationSection(): JSX.Element {
         style={{ x: smoothMouseX, y: smoothMouseY, scale: 1.05 }}
       >
         <Image
-          src="/villa-bg.jpg"
+          src="/new-bg-2.png"
           alt="Luxury modern villa exterior at dusk"
           fill
           className="object-cover"
@@ -142,99 +145,100 @@ export function RegistrationSection(): JSX.Element {
           viewport={{ once: true, amount: 0.2 }}
           className="mx-auto w-full max-w-lg"
         >
-          <GlassPanel className="w-full px-4 py-8 md:px-8 md:py-12">
-            <motion.div variants={itemVariants} className="mb-6 text-center md:mb-8">
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-gold">
-                Private Registration
-              </p>
-              <h2 className="mt-3 font-heading text-2xl leading-tight md:mt-4 md:text-4xl lg:text-5xl">
-                Reserve Your Presence
-              </h2>
-            </motion.div>
-
-            <form
-              className="flex flex-col gap-5 md:gap-6"
-              noValidate
-              onSubmit={handleSubmit}
-            >
-              <motion.div variants={itemVariants}>
-                <FormField
-                  id="fullName"
-                  label="Full Name"
-                  value={values.fullName}
-                  onChange={(v) => handleFieldChange("fullName", v)}
-                  placeholder="Your name"
-                  required
-                  error={errors.fullName}
-                />
-              </motion.div>
-              <motion.div variants={itemVariants}>
-                <FormField
-                  id="phone"
-                  label="Phone"
-                  type="tel"
-                  value={values.phone}
-                  onChange={(v) => handleFieldChange("phone", v)}
-                  placeholder="+91 98765 43210"
-                  required
-                  error={errors.phone}
-                />
-              </motion.div>
-              <motion.div variants={itemVariants}>
-                <FormField
-                  id="email"
-                  label="Email"
-                  type="email"
-                  value={values.email}
-                  onChange={(v) => handleFieldChange("email", v)}
-                  placeholder="name@example.com"
-                  required
-                  error={errors.email}
-                />
-              </motion.div>
-              <motion.div variants={itemVariants} className="grid gap-5 md:grid-cols-2 md:gap-6">
-                <FormField
-                  id="adults"
-                  label="Adults"
-                  type="number"
-                  min={1}
-                  max={12}
-                  value={values.adults}
-                  onChange={(v) => handleFieldChange("adults", v)}
-                  required
-                  error={errors.adults}
-                />
-                <FormField
-                  id="children"
-                  label="Children"
-                  type="number"
-                  min={0}
-                  max={12}
-                  value={values.children}
-                  onChange={(v) => handleFieldChange("children", v)}
-                  required
-                  error={errors.children}
-                />
+          {submitted ? (
+            <GiftCard name={registeredName} />
+          ) : (
+            <GlassPanel className="w-full px-4 py-8 md:px-8 md:py-12">
+              <motion.div variants={itemVariants} className="mb-6 text-center md:mb-8">
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-gold">
+                  Private Registration
+                </p>
+                <h2 className="mt-3 font-heading text-2xl leading-tight md:mt-4 md:text-4xl lg:text-5xl">
+                  Reserve Your Presence
+                </h2>
               </motion.div>
 
-              <motion.div variants={itemVariants} className="pt-4 md:pt-6 flex justify-center w-full">
-                <GoldButton type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Submitting…" : "Reserve Your Invitation"}
-                </GoldButton>
-              </motion.div>
-            </form>
+              <form
+                className="flex flex-col gap-5 md:gap-6"
+                noValidate
+                onSubmit={handleSubmit}
+              >
+                <motion.div variants={itemVariants}>
+                  <FormField
+                    id="fullName"
+                    label="Guest Full Name"
+                    value={values.fullName}
+                    onChange={(v) => handleFieldChange("fullName", v)}
+                    placeholder="Your name"
+                    required
+                    error={errors.fullName}
+                  />
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <FormField
+                    id="phone"
+                    label="Contact Number"
+                    type="tel"
+                    value={values.phone}
+                    onChange={(v) => handleFieldChange("phone", v)}
+                    placeholder="+91 98765 43210"
+                    required
+                    error={errors.phone}
+                  />
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <FormField
+                    id="email"
+                    label="Email Address"
+                    type="email"
+                    value={values.email}
+                    onChange={(v) => handleFieldChange("email", v)}
+                    placeholder="name@example.com"
+                    required
+                    error={errors.email}
+                  />
+                </motion.div>
+                <motion.div variants={itemVariants} className="grid gap-5 md:grid-cols-2 md:gap-6">
+                  <FormField
+                    id="adults"
+                    label="Number of Adults"
+                    type="number"
+                    min={1}
+                    max={12}
+                    value={values.adults}
+                    onChange={(v) => handleFieldChange("adults", v)}
+                    required
+                    error={errors.adults}
+                  />
+                  <FormField
+                    id="children"
+                    label="Number of Children"
+                    type="number"
+                    min={0}
+                    max={12}
+                    value={values.children}
+                    onChange={(v) => handleFieldChange("children", v)}
+                    required
+                    error={errors.children}
+                  />
+                </motion.div>
 
-            <motion.p
-              variants={itemVariants}
-              className={`mt-4 min-h-5 text-center text-sm tracking-[0.03em] ${submitError ? "text-amber-300/90" : submitted ? "text-gold" : "text-text-muted"
-                }`}
-            >
-              {submitError ??
-                (submitted
-                  ? "Your invitation request has been received. Our concierge team will contact you shortly."
-                  : "All entries are private and reviewed by invitation desk.")}
-            </motion.p>
-          </GlassPanel>
+                <motion.div variants={itemVariants} className="pt-4 md:pt-6 flex justify-center w-full">
+                  <GoldButton type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Submitting…" : "Reserve Your Invitation"}
+                  </GoldButton>
+                </motion.div>
+              </form>
+
+              <motion.p
+                variants={itemVariants}
+                className={`mt-4 min-h-5 text-center text-sm tracking-[0.03em] ${submitError ? "text-amber-300/90" : "text-text-muted"
+                  }`}
+              >
+                {submitError ?? "All entries are private and reviewed by invitation desk."}
+              </motion.p>
+            </GlassPanel>
+          )}
         </motion.div>
       </div>
     </section>

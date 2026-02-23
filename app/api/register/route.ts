@@ -106,13 +106,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    await appendToSheet({
+    // Fire and forget updating the sheet, returning the API response early
+    appendToSheet({
       fullName,
       contactNumber,
       emailAddress,
       numberOfAdults: adults,
       numberOfKids: kids
-    });
+    }).catch(console.error);
 
     return NextResponse.json(
       { success: true, message: "Registration saved successfully" },

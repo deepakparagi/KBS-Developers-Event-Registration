@@ -43,9 +43,12 @@ export function FormField({
   const isIncrementDisabled = value !== "" && max !== undefined && parseInt(value, 10) >= max;
 
   return (
-    <label htmlFor={id} className="flex w-full flex-col gap-1.5">
-      <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-gold/70">
+    <label htmlFor={id} className="group relative flex w-full flex-col gap-2">
+      <span className="flex items-center text-sm font-medium tracking-wider text-white/80 transition-colors duration-300 group-focus-within:text-gold group-hover:text-white">
         {label}
+        {required && (
+          <span className="ml-2 inline-block h-1 w-1 rounded-full bg-gold shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+        )}
       </span>
       {type === "number" ? (
         <div className="relative flex items-center w-full">
